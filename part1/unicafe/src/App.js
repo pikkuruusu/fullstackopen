@@ -8,12 +8,15 @@ const Button = ({ text, handleClick }) => {
   )
 }
 
-const DisplayStatistics = ({ good, neutral, bad}) => {
+const DisplayStatistics = ({ stats }) => {
   return (
     <p>
-      good: {good}<br />
-      neutral: {neutral}<br />
-      bad: {bad}<br />
+      good: {stats.good}<br />
+      neutral: {stats.neutral}<br />
+      bad: {stats.bad}<br />
+      all: {stats.total}<br />
+      average: {stats.average}<br />
+      positive: {stats.positive} %
     </p>
   )
 }
@@ -28,6 +31,20 @@ const App = () => {
   const increaseNeutral = () => setNeutral(neutral + 1)
   const increaseBad = () => setBad(bad +1)
 
+  const total = good + neutral + bad
+  const averageScore = () => total ? (good-bad)/total : 0
+
+  const positivePercentage = () => total ? (good/total) * 100 : 0
+
+  const statistics = {
+    good: good,
+    neutral: neutral,
+    bad: bad,
+    total: total,
+    average: averageScore(),
+    positive: positivePercentage()
+  }
+
   return (
     <div>
       <h1>give feedback</h1>
@@ -37,7 +54,7 @@ const App = () => {
         <Button text='Bad' handleClick={increaseBad} />
       </p>
       <h1>statistics</h1>
-      <DisplayStatistics good={good} neutral={neutral} bad={bad} />
+      <DisplayStatistics stats={statistics} />
     </div>
   )
 }
