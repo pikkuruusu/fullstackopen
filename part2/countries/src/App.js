@@ -6,9 +6,11 @@ import ShowCountries from "./components/ShowCountries";
 const App = () => {
   const [countries, setCountries] = useState([])
   const [searchFilter, setSearchFilter] = useState('')
+  const [displaySingle, setDisplaySingle] = useState(false)
 
   const handleFilterChange = (e) => {
     setSearchFilter(e.target.value)
+    setDisplaySingle(false)
   }
 
   useEffect(() => {
@@ -28,7 +30,9 @@ const App = () => {
       <div>
         find countries <input value={searchFilter} onChange={handleFilterChange}/>
       </div>
-      <ShowCountries countries={countriesToShow} />
+        <ShowCountries countries={countriesToShow} 
+          displaySingle={displaySingle}
+          setDisplaySingle={setDisplaySingle}/>
     </div>
   );
 }
