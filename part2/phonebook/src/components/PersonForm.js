@@ -1,16 +1,28 @@
 import Input from "./Input"
+import personService from "./../services/persons"
 
 const PersonForm = ({ persons, setPersons, nameValue, setNewName, numberValue, setNewNumber }) => {
     const addPerson = (e) => {
         e.preventDefault()
-        if (persons.map(person => person.name).indexOf(nameValue) == -1) {
-            setPersons(persons.concat({ 
-                name: nameValue, 
-                number: numberValue,
-                id: persons.length + 1 
-            }))
+        const trimmedName = nameValue.trim()
+
+        const personObject = {
+            name: trimmedName, 
+            number: numberValue, 
+        }
+
+        if (persons.map(person => person.name).indexOf(trimmedName) === -1) {            
+            personService.create(personObject)
+                .then(response => setPersons(persons.concat(response)))
         } else {
-            alert(`${nameValue} is already added to phonebook`)
+            const confirmMsg = `${trimmedName} is already added to phonebook. Do you want to update the number?`
+            if(window.confirm(confirmMsg)) {
+                const personToUpdateId = persons.filter(person => person.name === trimmedName)[0].id
+                personService.update(personToUpdateId, personObject)
+                    .then(response => {
+                        setPersons(persons.map(person => person.id !== personToUpdateId ? person : response))
+                    })
+                }
         }
         setNewName('')
         setNewNumber('')
