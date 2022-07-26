@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
 
+import Notification from './components/Notification'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import PersonList from './components/PersonsList'
@@ -9,6 +10,7 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [successMsg, setSuccessMsg] = useState(null)
 
   const [searchFilter, setSearchFilter] = useState('')
 
@@ -24,6 +26,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMsg} />
       <Filter value={searchFilter} onChange={setSearchFilter}/>
       <h2>Add a new</h2>
       <PersonForm 
@@ -33,6 +36,7 @@ const App = () => {
         setNewName={setNewName}
         numberValue={newNumber}
         setNewNumber={setNewNumber}
+        setSuccessMsg={setSuccessMsg}
       />
       <h2>Numbers</h2>
       <PersonList persons={personsToShow} setPersons={setPersons}/>

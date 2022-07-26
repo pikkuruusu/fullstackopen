@@ -1,7 +1,7 @@
 import Input from "./Input"
 import personService from "./../services/persons"
 
-const PersonForm = ({ persons, setPersons, nameValue, setNewName, numberValue, setNewNumber }) => {
+const PersonForm = ({ persons, setPersons, nameValue, setNewName, numberValue, setNewNumber, setSuccessMsg }) => {
     const addPerson = (e) => {
         e.preventDefault()
         const trimmedName = nameValue.trim()
@@ -13,7 +13,13 @@ const PersonForm = ({ persons, setPersons, nameValue, setNewName, numberValue, s
 
         if (persons.map(person => person.name).indexOf(trimmedName) === -1) {            
             personService.create(personObject)
-                .then(response => setPersons(persons.concat(response)))
+                .then(response => {
+                    setPersons(persons.concat(response))
+                    setSuccessMsg(`Added ${trimmedName} to the phonebook.`)
+                    setTimeout(() => {
+                        setSuccessMsg(null)
+                    }, 4000)
+                })
         } else {
             const confirmMsg = `${trimmedName} is already added to phonebook. Do you want to update the number?`
             if(window.confirm(confirmMsg)) {
@@ -21,6 +27,10 @@ const PersonForm = ({ persons, setPersons, nameValue, setNewName, numberValue, s
                 personService.update(personToUpdateId, personObject)
                     .then(response => {
                         setPersons(persons.map(person => person.id !== personToUpdateId ? person : response))
+                        setSuccessMsg(`${trimmedName} was updated.`)
+                        setTimeout(() => {
+                            setSuccessMsg(null)
+                        }, 4000)
                     })
                 }
         }
