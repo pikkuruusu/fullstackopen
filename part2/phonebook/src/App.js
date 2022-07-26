@@ -10,7 +10,8 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [successMsg, setSuccessMsg] = useState(null)
+  const [notifMsg, setNotifMsg] = useState(null)
+  const [notifClass, setNotifClass] = useState(null)
 
   const [searchFilter, setSearchFilter] = useState('')
 
@@ -26,7 +27,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMsg} />
+      <Notification className={notifClass} message={notifMsg} />
       <Filter value={searchFilter} onChange={setSearchFilter}/>
       <h2>Add a new</h2>
       <PersonForm 
@@ -36,10 +37,16 @@ const App = () => {
         setNewName={setNewName}
         numberValue={newNumber}
         setNewNumber={setNewNumber}
-        setSuccessMsg={setSuccessMsg}
+        setNotifClass={setNotifClass}
+        setNotifMsg={setNotifMsg}
       />
       <h2>Numbers</h2>
-      <PersonList persons={personsToShow} setPersons={setPersons}/>
+      <PersonList 
+        persons={personsToShow} 
+        setPersons={setPersons}
+        setNotifClass={setNotifClass}
+        setNotifMsg={setNotifMsg}
+      />
       ...
     </div>
   )

@@ -1,7 +1,23 @@
 import Input from "./Input"
 import personService from "./../services/persons"
 
-const PersonForm = ({ persons, setPersons, nameValue, setNewName, numberValue, setNewNumber, setSuccessMsg }) => {
+const PersonForm = ({ persons, setPersons, nameValue, setNewName, numberValue, setNewNumber, setNotifClass, setNotifMsg }) => {
+    const successNotification = (msg) => {
+        setNotifClass('success')
+        setNotifMsg(msg)
+        setTimeout(() => {
+            setNotifMsg(null)
+        }, 4000)
+    }
+
+    const errorNotification = (msg) => {
+        setNotifClass('error')
+        setNotifMsg(msg)
+        setTimeout(() => {
+            setNotifMsg(null)
+        }, 4000)
+    }
+    
     const addPerson = (e) => {
         e.preventDefault()
         const trimmedName = nameValue.trim()
@@ -15,10 +31,7 @@ const PersonForm = ({ persons, setPersons, nameValue, setNewName, numberValue, s
             personService.create(personObject)
                 .then(response => {
                     setPersons(persons.concat(response))
-                    setSuccessMsg(`Added ${trimmedName} to the phonebook.`)
-                    setTimeout(() => {
-                        setSuccessMsg(null)
-                    }, 4000)
+                    successNotification(`Added ${trimmedName} to the phonebook.`)
                 })
         } else {
             const confirmMsg = `${trimmedName} is already added to phonebook. Do you want to update the number?`
@@ -27,10 +40,11 @@ const PersonForm = ({ persons, setPersons, nameValue, setNewName, numberValue, s
                 personService.update(personToUpdateId, personObject)
                     .then(response => {
                         setPersons(persons.map(person => person.id !== personToUpdateId ? person : response))
-                        setSuccessMsg(`${trimmedName} was updated.`)
-                        setTimeout(() => {
-                            setSuccessMsg(null)
-                        }, 4000)
+                        successNotification(`${trimmedName} was updated.`)
+                    })
+                    .catch(error => {
+                        errorNotification(`${trimmedName} can't be found on server!`)
+                        setPersons(persons.filter(person => person.id !== personToUpdateId))
                     })
                 }
         }
